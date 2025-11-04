@@ -13,7 +13,7 @@ const screenshots = [
   getAssetPath('assets/images/screenshot 5.png'),
 ]
 
-const ScreenshotCarousel = () => {
+const ScreenshotCarousel = ({ videoUrl }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
@@ -22,17 +22,39 @@ const ScreenshotCarousel = () => {
     triggerOnce: true,
   })
 
+  // Build carousel items: video first (if provided), then screenshots
+  const carouselItems = []
+  if (videoUrl) {
+    carouselItems.push({ type: 'video', url: videoUrl })
+    console.log('Video added to carousel:', videoUrl)
+  }
+  screenshots.forEach((screenshot) => {
+    carouselItems.push({ type: 'image', url: screenshot })
+  })
+  
+  console.log('Carousel items:', carouselItems.length, 'Current index:', currentIndex)
+
   const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + screenshots.length) % screenshots.length)
+    setCurrentIndex((prev) => (prev - 1 + carouselItems.length) % carouselItems.length)
   }
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % screenshots.length)
+    setCurrentIndex((prev) => (prev + 1) % carouselItems.length)
   }
 
   const handleDotClick = (index) => {
     setCurrentIndex(index)
   }
+
+  const currentItem = carouselItems[currentIndex]
+  
+  // Safety check
+  if (!currentItem) {
+    console.error('No current item at index:', currentIndex, 'Items:', carouselItems)
+    return null
+  }
+  
+  console.log('Rendering carousel item:', currentItem.type, currentItem.url)
 
   return (
     <Box
@@ -70,6 +92,7 @@ const ScreenshotCarousel = () => {
             alignItems: 'center',
             justifyContent: 'flex-start',
             pl: 2,
+            pointerEvents: currentItem.type === 'video' ? 'none' : 'auto',
             '&:hover .arrow-left': {
               opacity: 0.8,
             },
@@ -145,17 +168,64 @@ const ScreenshotCarousel = () => {
                   maxWidth: '100%',
                 }}
               >
-                <Box
-                  component="img"
-                  src={screenshots[currentIndex]}
-                  alt={`Gameplay screenshot ${currentIndex + 1}`}
-                  sx={{
-                    height: { xs: 'auto', md: '400px' },
-                    width: { xs: '85vw', md: 'auto' },
-                    maxWidth: '100%',
-                    display: 'block',
-                  }}
-                />
+                {currentItem.type === 'video' ? (
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      width: { xs: '85vw', md: 'auto' },
+                      maxWidth: '100%',
+                      minHeight: { xs: '200px', md: '400px' },
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Box
+                      component="video"
+                      src={currentItem.url}
+                      controls
+                      playsInline
+                      preload="metadata"
+                      sx={{
+                        width: { xs: '85vw', md: 'auto' },
+                        height: { xs: 'auto', md: '400px' },
+                        maxWidth: '100%',
+                        display: 'block',
+                        cursor: 'pointer',
+                      }}
+                      onClick={(e) => {
+                        const video = e.currentTarget
+                        if (video.paused) {
+                          video.play().catch((err) => console.error('Play error:', err))
+                        } else {
+                          video.pause()
+                        }
+                      }}
+                      onError={(e) => {
+                        console.error('Video error:', e)
+                        console.error('Video URL:', currentItem.url)
+                        const video = e.currentTarget
+                        console.error('Video error details:', video.error)
+                      }}
+                      onLoadedData={() => {
+                        console.log('Video loaded:', currentItem.url)
+                      }}
+                    >
+                      Your browser does not support the video tag.
+                    </Box>
+                  </Box>
+                ) : (
+                  <Box
+                    component="img"
+                    src={currentItem.url}
+                    alt={`Gameplay screenshot ${videoUrl ? currentIndex : currentIndex + 1}`}
+                    sx={{
+                      height: { xs: 'auto', md: '400px' },
+                      width: { xs: '85vw', md: 'auto' },
+                      maxWidth: '100%',
+                      display: 'block',
+                    }}
+                  />
+                )}
               </Paper>
             </motion.div>
           </AnimatePresence>
@@ -170,7 +240,7 @@ const ScreenshotCarousel = () => {
             alignItems: 'center',
           }}
         >
-          {screenshots.map((_, index) => (
+          {carouselItems.map((_, index) => (
             <Box
               key={index}
               onClick={() => handleDotClick(index)}

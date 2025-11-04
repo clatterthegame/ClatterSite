@@ -1,5 +1,6 @@
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
+import { Box, Container } from '@mui/material'
 import { Helmet } from 'react-helmet-async'
 import { useEffect } from 'react'
 import theme from './theme/theme'
@@ -16,6 +17,7 @@ import ReleaseInfo from './components/ReleaseInfo'
 import SteamWidget from './components/SteamWidget'
 import SteamCTA from './components/SteamCTA'
 import NewsletterSignup from './components/NewsletterSignup'
+import SocialLinks from './components/SocialLinks'
 import Footer from './components/Footer'
 
 // Get Google Analytics ID
@@ -45,7 +47,7 @@ function App() {
   const gameConfig = {
     steamUrl: import.meta.env.VITE_STEAM_URL || 'https://store.steampowered.com/app/YOUR_APP_ID',
     steamAppId: import.meta.env.VITE_STEAM_APP_ID || 'YOUR_APP_ID',
-    videoUrl: import.meta.env.VITE_TRAILER_URL || '',
+    videoUrl: import.meta.env.VITE_TRAILER_URL || getAssetPath('assets/video/test.mov'),
     price: import.meta.env.VITE_GAME_PRICE || '$9.99',
     releaseDate: import.meta.env.VITE_RELEASE_DATE || '2024',
     isAvailable: import.meta.env.VITE_IS_AVAILABLE === 'true' || true,
@@ -104,17 +106,28 @@ function App() {
       </a>
 
       <main id="main-content" style={{ minHeight: '100vh', background: '#000' }}>
-        <HeroSection />
+        {/* Title/Hero Section */}
+        <HeroSection videoUrl={gameConfig.videoUrl} />
+        
+        {/* Purchase/Socials */}
+        <SteamCTA steamUrl={gameConfig.steamUrl} price={gameConfig.price} />
+        <Box sx={{ py: 4, bgcolor: 'background.paper' }}>
+          <Container maxWidth="md">
+            <SocialLinks />
+          </Container>
+        </Box>
+        
+        {/* About */}
+        <GameDescription />
+        
+        {/* Everything else */}
         <GenreTags />
         <ReleaseInfo releaseDate={gameConfig.releaseDate} isAvailable={gameConfig.isAvailable} />
-        <GameDescription />
-        <GameTrailer videoUrl={gameConfig.videoUrl} />
         <ScreenshotGallery />
         <SystemRequirements />
         <ReviewsSection />
         <AchievementsShowcase />
         <SteamWidget steamAppId={gameConfig.steamAppId} />
-        <SteamCTA steamUrl={gameConfig.steamUrl} price={gameConfig.price} />
         <NewsletterSignup />
         <Footer />
       </main>

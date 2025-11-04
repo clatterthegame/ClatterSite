@@ -6,9 +6,11 @@ import LoadingStates from './LoadingStates'
 import ScreenshotCarousel from './ScreenshotCarousel'
 import { getAssetPath } from '../utils/paths'
 
-const HeroSection = () => {
+const HeroSection = ({ videoUrl }) => {
   const canvasRef = useRef(null)
   const { loading, error } = useUnity(canvasRef)
+  
+  console.log('HeroSection received videoUrl:', videoUrl)
 
   return (
     <Box
@@ -102,7 +104,7 @@ const HeroSection = () => {
           zIndex: 100,
         }}
       >
-        <ScreenshotCarousel />
+        <ScreenshotCarousel videoUrl={videoUrl} />
       </Box>
     </Box>
   )
