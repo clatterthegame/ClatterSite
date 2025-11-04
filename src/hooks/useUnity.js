@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { getAssetPath } from '../utils/paths'
 
 const useUnity = (canvasRef) => {
   const [loading, setLoading] = useState(true)
@@ -13,8 +14,7 @@ const useUnity = (canvasRef) => {
 
     // Load Unity loader script
     const script = document.createElement('script')
-    const baseUrl = import.meta.env.BASE_URL
-    script.src = `${baseUrl}build/Web Build 1.loader.js`
+    script.src = getAssetPath('build/Web Build 1.loader.js')
     script.async = true
 
     script.onload = () => {
@@ -27,9 +27,9 @@ const useUnity = (canvasRef) => {
 
         // Create Unity instance
         window.createUnityInstance(canvas, {
-          dataUrl: `${baseUrl}build/Web Build 1.data.unityweb`,
-          frameworkUrl: `${baseUrl}build/Web Build 1.framework.js.unityweb`,
-          codeUrl: `${baseUrl}build/Web Build 1.wasm.unityweb`,
+          dataUrl: getAssetPath('build/Web Build 1.data.unityweb'),
+          frameworkUrl: getAssetPath('build/Web Build 1.framework.js.unityweb'),
+          codeUrl: getAssetPath('build/Web Build 1.wasm.unityweb'),
           streamingAssetsUrl: 'StreamingAssets',
           companyName: 'YourCompany',
           productName: 'Clatter',

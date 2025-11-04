@@ -3,14 +3,14 @@ import { Box, Container, Typography, ImageList, ImageListItem, Modal, IconButton
 import { useInView } from 'react-intersection-observer'
 import { motion } from 'framer-motion'
 import { Close } from '@mui/icons-material'
+import { getAssetPath } from '../utils/paths'
 
-const baseUrl = import.meta.env.BASE_URL
 const screenshots = [
-  `${baseUrl}assets/images/screenshot 1.png`,
-  `${baseUrl}assets/images/screenshot 2.png`,
-  `${baseUrl}assets/images/screenshot 3.png`,
-  `${baseUrl}assets/images/screenshot 4.png`,
-  `${baseUrl}assets/images/screenshot 5.png`,
+  getAssetPath('assets/images/screenshot 1.png'),
+  getAssetPath('assets/images/screenshot 2.png'),
+  getAssetPath('assets/images/screenshot 3.png'),
+  getAssetPath('assets/images/screenshot 4.png'),
+  getAssetPath('assets/images/screenshot 5.png'),
 ]
 
 const ScreenshotGallery = () => {

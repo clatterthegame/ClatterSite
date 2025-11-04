@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import useUnity from '../hooks/useUnity'
 import LoadingStates from './LoadingStates'
 import ScreenshotCarousel from './ScreenshotCarousel'
+import { getAssetPath } from '../utils/paths'
 
 const HeroSection = () => {
   const canvasRef = useRef(null)
@@ -21,7 +22,7 @@ const HeroSection = () => {
       {/* Background Image */}
       <Box
         component="img"
-        src={`${import.meta.env.BASE_URL}assets/images/BackgroundDieGrid.png`}
+        src={getAssetPath('assets/images/BackgroundDieGrid.png')}
         alt="Background"
         sx={{
           position: 'absolute',

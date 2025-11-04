@@ -3,6 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { Helmet } from 'react-helmet-async'
 import { useEffect } from 'react'
 import theme from './theme/theme'
+import { getAssetPath } from './utils/paths'
 import HeroSection from './components/HeroSection'
 import GameDescription from './components/GameDescription'
 import GameTrailer from './components/GameTrailer'
@@ -66,14 +67,14 @@ function App() {
           content="Master the art of dice manipulation and strategic planning in Clatter."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content={`${import.meta.env.BASE_URL}assets/images/screenshot 1.png`} />
+        <meta property="og:image" content={getAssetPath('assets/images/screenshot 1.png')} />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Clatter - Innovative Dice Strategy Game" />
         <meta
           name="twitter:description"
           content="Master the art of dice manipulation and strategic planning in Clatter."
         />
-        <meta name="twitter:image" content={`${import.meta.env.BASE_URL}assets/images/screenshot 1.png`} />
+        <meta name="twitter:image" content={getAssetPath('assets/images/screenshot 1.png')} />
         <script type="application/ld+json">
           {JSON.stringify({
             '@context': 'https://schema.org',
