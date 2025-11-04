@@ -1,6 +1,7 @@
 import { Box, Container, Typography, Card, CardContent, Grid, Rating } from '@mui/material'
 import { useInView } from 'react-intersection-observer'
 import { motion } from 'framer-motion'
+import { getAssetPath } from '../utils/paths'
 
 const reviews = [
   {
@@ -32,10 +33,33 @@ const ReviewsSection = () => {
       component="section"
       sx={{
         py: { xs: 8, md: 12 },
-        bgcolor: 'background.default',
+        position: 'relative',
+        overflow: 'hidden',
+        background: `
+          linear-gradient(135deg, rgba(10, 0, 20, 0.85) 0%, rgba(20, 0, 40, 0.85) 100%),
+          url(${getAssetPath('assets/images/tons-of-dice.png')})
+        `,
+        backgroundSize: 'cover, 150%',
+        backgroundPosition: 'center, center',
+        backgroundAttachment: 'fixed, fixed',
+        backgroundBlendMode: 'normal, screen',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: `
+            radial-gradient(circle at 50% 30%, rgba(255, 0, 255, 0.15) 0%, transparent 70%),
+            radial-gradient(circle at 20% 70%, rgba(0, 255, 255, 0.12) 0%, transparent 60%)
+          `,
+          pointerEvents: 'none',
+          zIndex: 0,
+        },
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}

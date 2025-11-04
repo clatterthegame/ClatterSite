@@ -6,11 +6,11 @@ import { useInView } from 'react-intersection-observer'
 import { getAssetPath } from '../utils/paths'
 
 const screenshots = [
-  getAssetPath('assets/images/screenshot 1.png'),
-  getAssetPath('assets/images/screenshot 2.png'),
-  getAssetPath('assets/images/screenshot 3.png'),
-  getAssetPath('assets/images/screenshot 4.png'),
-  getAssetPath('assets/images/screenshot 5.png'),
+  getAssetPath('assets/images/screenshot-1.png'),
+  getAssetPath('assets/images/screenshot-2.png'),
+  getAssetPath('assets/images/screenshot-3.png'),
+  getAssetPath('assets/images/screenshot-4.png'),
+  getAssetPath('assets/images/screenshot-5.png'),
 ]
 
 const ScreenshotCarousel = ({ videoUrl }) => {
@@ -155,17 +155,26 @@ const ScreenshotCarousel = ({ videoUrl }) => {
           <AnimatePresence mode="wait">
             <motion.div
               key={currentIndex}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
+              initial={{ opacity: 0, x: 50, scale: 0.9, rotateY: 15 }}
+              animate={{ opacity: 1, x: 0, scale: 1, rotateY: 0 }}
+              exit={{ opacity: 0, x: -50, scale: 0.9, rotateY: -15 }}
+              transition={{
+                duration: 0.5,
+                ease: [0.4, 0, 0.2, 1],
+              }}
             >
               <Paper
                 elevation={24}
                 sx={{
-                  borderRadius: 3,
+                  borderRadius: 4,
                   overflow: 'hidden',
                   maxWidth: '100%',
+                  border: 'none',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.8)',
+                  transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                  '&:hover': {
+                    boxShadow: '0 12px 48px rgba(0, 0, 0, 0.9)',
+                  },
                 }}
               >
                 {currentItem.type === 'video' ? (
