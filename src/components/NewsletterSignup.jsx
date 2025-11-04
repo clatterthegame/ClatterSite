@@ -29,7 +29,9 @@ const NewsletterSignup = () => {
       component="section"
       sx={{
         py: { xs: 8, md: 12 },
-        bgcolor: 'background.paper',
+        position: 'relative',
+        overflow: 'hidden',
+        background: 'linear-gradient(135deg, rgba(10, 0, 20, 0.95) 0%, rgba(20, 0, 40, 0.95) 100%)',
       }}
     >
       <Container maxWidth="sm">

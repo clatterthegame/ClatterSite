@@ -106,29 +106,56 @@ function App() {
       </a>
 
       <main id="main-content" style={{ minHeight: '100vh' }}>
-        {/* Title/Hero Section */}
-        <HeroSection videoUrl={gameConfig.videoUrl} />
+        {/* Hero Section with Purchase CTA */}
+        <HeroSection 
+          videoUrl={gameConfig.videoUrl}
+          steamUrl={gameConfig.steamUrl}
+          price={gameConfig.price}
+        />
         
-        {/* Purchase/Socials */}
-        <SteamCTA steamUrl={gameConfig.steamUrl} price={gameConfig.price} />
-        <Box sx={{ py: 4, bgcolor: 'background.paper' }}>
+        {/* Social Links */}
+        <Box 
+          sx={{ 
+            py: { xs: 6, md: 8 }, 
+            background: 'linear-gradient(135deg, rgba(10, 0, 20, 0.95) 0%, rgba(20, 0, 40, 0.95) 100%)',
+          }}
+        >
           <Container maxWidth="md">
             <SocialLinks />
           </Container>
         </Box>
         
-        {/* About */}
+        {/* About Section */}
         <GameDescription />
         
-        {/* Everything else */}
-        <GenreTags />
-        <ReleaseInfo releaseDate={gameConfig.releaseDate} isAvailable={gameConfig.isAvailable} />
+        {/* Game Info */}
+        <Box
+          sx={{
+            py: { xs: 6, md: 8 },
+            background: 'linear-gradient(135deg, rgba(10, 0, 20, 0.95) 0%, rgba(20, 0, 40, 0.95) 100%)',
+          }}
+        >
+          <Container maxWidth="md">
+            <GenreTags />
+            <ReleaseInfo releaseDate={gameConfig.releaseDate} isAvailable={gameConfig.isAvailable} />
+          </Container>
+        </Box>
+        
+        {/* Screenshots */}
         <ScreenshotGallery />
+        
+        {/* Game Details */}
         <SystemRequirements />
         <ReviewsSection />
+        
+        {/* Additional Content */}
         <AchievementsShowcase />
         <SteamWidget steamAppId={gameConfig.steamAppId} />
+        
+        {/* Newsletter */}
         <NewsletterSignup />
+        
+        {/* Footer */}
         <Footer />
       </main>
     </ThemeProvider>

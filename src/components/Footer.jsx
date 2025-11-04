@@ -6,10 +6,10 @@ const Footer = () => {
     <Box
       component="footer"
       sx={{
-        py: 6,
-        bgcolor: 'background.default',
+        py: { xs: 6, md: 8 },
+        background: 'linear-gradient(135deg, rgba(0, 0, 0, 0.95) 0%, rgba(10, 0, 20, 0.95) 100%)',
         borderTop: '1px solid',
-        borderColor: 'divider',
+        borderColor: 'rgba(255, 0, 255, 0.2)',
       }}
     >
       <Container maxWidth="lg">

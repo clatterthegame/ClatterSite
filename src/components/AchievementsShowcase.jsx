@@ -2,6 +2,7 @@ import { Box, Container, Typography, Grid, Card, CardContent, CardMedia } from '
 import { useInView } from 'react-intersection-observer'
 import { motion } from 'framer-motion'
 import { EmojiEvents } from '@mui/icons-material'
+import { getAssetPath } from '../utils/paths'
 
 const achievements = [
   { id: 1, name: 'First Roll', description: 'Complete your first game', icon: '🎲' },
@@ -21,10 +22,19 @@ const AchievementsShowcase = () => {
       component="section"
       sx={{
         py: { xs: 8, md: 12 },
-        bgcolor: 'background.paper',
+        position: 'relative',
+        overflow: 'hidden',
+        background: `
+          linear-gradient(135deg, rgba(10, 0, 20, 0.85) 0%, rgba(20, 0, 40, 0.85) 100%),
+          url(${getAssetPath('assets/images/tons-of-dice.png')})
+        `,
+        backgroundSize: 'cover, 150%',
+        backgroundPosition: 'center, center',
+        backgroundAttachment: 'fixed, fixed',
+        backgroundBlendMode: 'normal, screen',
       }}
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}

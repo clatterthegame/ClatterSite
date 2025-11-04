@@ -13,13 +13,11 @@ const GenreTags = () => {
   return (
     <Box
       ref={ref}
-      component="section"
+      component="div"
       sx={{
-        py: 4,
-        bgcolor: 'background.default',
+        mb: 4,
       }}
     >
-      <Container maxWidth="md">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -55,7 +53,6 @@ const GenreTags = () => {
             ))}
           </Stack>
         </motion.div>
-      </Container>
     </Box>
   )
 }

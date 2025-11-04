@@ -1,14 +1,20 @@
 import { useRef } from 'react'
-import { Box, Fade } from '@mui/material'
+import { Box, Fade, Button, Stack } from '@mui/material'
 import { motion } from 'framer-motion'
+import { PlayArrow, AddShoppingCart } from '@mui/icons-material'
+import { useInView } from 'react-intersection-observer'
 import useUnity from '../hooks/useUnity'
 import LoadingStates from './LoadingStates'
 import ScreenshotCarousel from './ScreenshotCarousel'
 import { getAssetPath } from '../utils/paths'
 
-const HeroSection = ({ videoUrl }) => {
+const HeroSection = ({ videoUrl, steamUrl, price }) => {
   const canvasRef = useRef(null)
   const { loading, error } = useUnity(canvasRef)
+  const { ref: ctaRef, inView: ctaInView } = useInView({
+    threshold: 0.1,
+    triggerOnce: true,
+  })
   
   console.log('HeroSection received videoUrl:', videoUrl)
 
@@ -21,8 +27,10 @@ const HeroSection = ({ videoUrl }) => {
       sx={{
         position: 'relative',
         width: '100%',
-        minHeight: { xs: '600px', md: '800px' },
+        minHeight: { xs: '100vh', md: '100vh' },
         overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
       }}
     >
       {/* Animated Background Image */}
@@ -38,7 +46,7 @@ const HeroSection = ({ videoUrl }) => {
           top: 0,
           left: 0,
           width: '100%',
-          height: { xs: '400px', md: '700px' },
+          height: '100%',
           objectFit: 'cover',
           zIndex: 1,
         }}
@@ -144,7 +152,7 @@ const HeroSection = ({ videoUrl }) => {
           top: 0,
           left: 0,
           width: '100%',
-          height: { xs: '400px', md: '700px' },
+          height: '100%',
           zIndex: 5,
         }}
       >
@@ -194,6 +202,86 @@ const HeroSection = ({ videoUrl }) => {
         }}
       >
         <ScreenshotCarousel videoUrl={videoUrl} />
+      </Box>
+
+      {/* Purchase CTA at Bottom */}
+      <Box
+        ref={ctaRef}
+        sx={{
+          position: 'absolute',
+          bottom: { xs: 30, md: 50 },
+          left: 0,
+          right: 0,
+          width: '100%',
+          zIndex: 101,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={ctaInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <Stack
+            direction={{ xs: 'column', sm: 'row' }}
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+            sx={{
+              px: { xs: 2, sm: 0 },
+            }}
+          >
+            {steamUrl && (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button
+                  variant="contained"
+                  size="large"
+                  href={steamUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  startIcon={<AddShoppingCart />}
+                  sx={{
+                    px: { xs: 4, sm: 5 },
+                    py: 1.75,
+                    fontSize: { xs: '1rem', sm: '1.1rem' },
+                    fontWeight: 700,
+                    minWidth: { xs: '180px', sm: '200px' },
+                  }}
+                >
+                  Buy on Steam
+                </Button>
+              </motion.div>
+            )}
+            {steamUrl && (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button
+                  variant="outlined"
+                  size="large"
+                  href={steamUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  startIcon={<PlayArrow />}
+                  sx={{
+                    px: { xs: 4, sm: 5 },
+                    py: 1.75,
+                    fontSize: { xs: '1rem', sm: '1.1rem' },
+                    fontWeight: 700,
+                    minWidth: { xs: '180px', sm: '200px' },
+                  }}
+                >
+                  Wishlist
+                </Button>
+              </motion.div>
+            )}
+          </Stack>
+        </motion.div>
       </Box>
     </Box>
   )

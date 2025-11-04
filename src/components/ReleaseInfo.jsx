@@ -12,13 +12,11 @@ const ReleaseInfo = ({ releaseDate, isAvailable }) => {
   return (
     <Box
       ref={ref}
-      component="section"
+      component="div"
       sx={{
-        py: 4,
-        bgcolor: 'background.paper',
+        mt: 2,
       }}
     >
-      <Container maxWidth="md">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -48,7 +46,6 @@ const ReleaseInfo = ({ releaseDate, isAvailable }) => {
             />
           </Box>
         </motion.div>
-      </Container>
     </Box>
   )
 }
