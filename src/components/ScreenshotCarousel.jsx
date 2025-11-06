@@ -7,10 +7,10 @@ import { getAssetPath } from '../utils/paths'
 
 const screenshots = [
   getAssetPath('assets/images/screenshot-1.png'),
-  getAssetPath('assets/images/screenshot-2.png'),
-  getAssetPath('assets/images/screenshot-3.png'),
-  getAssetPath('assets/images/screenshot-4.png'),
-  getAssetPath('assets/images/screenshot-5.png'),
+  getAssetPath('assets/images/screenshot-2.webp'),
+  getAssetPath('assets/images/screenshot-3.webp'),
+  getAssetPath('assets/images/screenshot-4.webp'),
+  getAssetPath('assets/images/screenshot-5.webp'),
 ]
 
 const ScreenshotCarousel = ({ videoUrl }) => {

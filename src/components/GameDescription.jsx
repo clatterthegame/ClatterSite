@@ -34,7 +34,7 @@ const GameDescription = () => {
         overflow: 'hidden',
         background: `
           linear-gradient(135deg, rgba(10, 0, 20, 0.85) 0%, rgba(20, 0, 40, 0.85) 100%),
-          url(${getAssetPath('assets/images/tons-of-dice.png')})
+          url(${getAssetPath('assets/images/tons-of-dice.webp')})
         `,
         backgroundSize: 'cover, 150%',
         backgroundPosition: 'center, center',

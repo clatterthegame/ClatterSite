@@ -7,10 +7,10 @@ import { getAssetPath } from '../utils/paths'
 
 const screenshots = [
   getAssetPath('assets/images/screenshot-1.png'),
-  getAssetPath('assets/images/screenshot-2.png'),
-  getAssetPath('assets/images/screenshot-3.png'),
-  getAssetPath('assets/images/screenshot-4.png'),
-  getAssetPath('assets/images/screenshot-5.png'),
+  getAssetPath('assets/images/screenshot-2.webp'),
+  getAssetPath('assets/images/screenshot-3.webp'),
+  getAssetPath('assets/images/screenshot-4.webp'),
+  getAssetPath('assets/images/screenshot-5.webp'),
 ]
 
 const ScreenshotGallery = () => {
@@ -38,7 +38,7 @@ const ScreenshotGallery = () => {
         overflow: 'hidden',
         background: `
           linear-gradient(135deg, rgba(10, 0, 20, 0.85) 0%, rgba(20, 0, 40, 0.85) 100%),
-          url(${getAssetPath('assets/images/tons-of-dice.png')})
+          url(${getAssetPath('assets/images/tons-of-dice.webp')})
         `,
         backgroundSize: 'cover, 150%',
         backgroundPosition: 'center, center',

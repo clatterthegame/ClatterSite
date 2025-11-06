@@ -40,7 +40,7 @@ const SteamCTA = ({ steamUrl, price }) => {
       {/* Floating Giant Die */}
       <Box
         component={motion.img}
-        src={getAssetPath('assets/images/dice.png')}
+        src={getAssetPath('assets/images/dice.webp')}
         alt="Giant die"
         animate={{
           y: [0, -50, 0],
