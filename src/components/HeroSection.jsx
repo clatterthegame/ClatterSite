@@ -35,7 +35,7 @@ const HeroSection = ({ videoUrl, steamUrl, price }) => {
       {/* Animated Background Image - LCP Image */}
       <Box
         component={motion.img}
-        src={getAssetPath('assets/images/background-die-grid.png')}
+        src={getAssetPath('assets/images/background-die-grid.webp')}
         alt="Background"
         fetchPriority="high"
         loading="eager"
