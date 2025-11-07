@@ -25,14 +25,23 @@ const SystemRequirements = () => {
         py: { xs: 6, md: 8 },
         position: 'relative',
         overflow: 'hidden',
-        background: `
+        backgroundImage: `
           linear-gradient(135deg, rgba(10, 0, 20, 0.85) 0%, rgba(20, 0, 40, 0.85) 100%),
-          url(${getAssetPath('assets/images/tons-of-dice.webp')})
+          url(${getAssetPath('assets/images/tons-of-dice-1000w.jpg')})
         `,
         backgroundSize: 'cover, cover',
         backgroundPosition: 'center, center',
         backgroundAttachment: 'scroll, scroll',
         backgroundBlendMode: 'normal, screen',
+        '@supports (background-image: image-set(url("x") 1x))': {
+          backgroundImage: `
+            linear-gradient(135deg, rgba(10, 0, 20, 0.85) 0%, rgba(20, 0, 40, 0.85) 100%),
+            image-set(
+              url(${getAssetPath('assets/images/tons-of-dice-1000w.jpg')}) 1x,
+              url(${getAssetPath('assets/images/tons-of-dice.webp')}) 2x
+            )
+          `,
+        },
         '&::before': {
           content: '""',
           position: 'absolute',

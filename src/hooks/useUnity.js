@@ -16,51 +16,48 @@ const useUnity = (canvasRef) => {
     const container = canvas.parentElement
     if (!container) return
 
-    const handleResize = () => {
-      if (!unityInstanceRef.current || !canvas) return
+    const getPixelRatio = () => Math.min(window.devicePixelRatio || 1, 1.5)
 
-      const containerWidth = container.clientWidth
-      const containerHeight = container.clientHeight
+    const syncCanvasSize = () => {
+      const displayWidth = container.clientWidth
+      const displayHeight = container.clientHeight
+      const scale = getPixelRatio()
 
-      // Set canvas CSS size to match container (display size)
-      canvas.style.width = `${containerWidth}px`
-      canvas.style.height = `${containerHeight}px`
+      canvas.style.width = `${displayWidth}px`
+      canvas.style.height = `${displayHeight}px`
+      canvas.width = Math.floor(displayWidth * scale)
+      canvas.height = Math.floor(displayHeight * scale)
 
-      // Try to notify Unity about the resize
-      // Unity will handle the actual rendering resolution internally
       try {
-        // Try to send resize message to Unity if available
-        if (unityInstanceRef.current && unityInstanceRef.current.SendMessage) {
-          unityInstanceRef.current.SendMessage('Canvas', 'OnResize', `${containerWidth},${containerHeight}`)
+        if (unityInstanceRef.current?.SendMessage) {
+          unityInstanceRef.current.SendMessage('Canvas', 'OnResize', `${displayWidth},${displayHeight}`)
         }
       } catch (e) {
-        // Unity might not have this handler, that's okay
-        // The canvas CSS sizing will still work for responsive display
+        // Unity might not have the handler; ignore
       }
 
-      // Also try Module.resize if available (Unity WebGL pattern)
       if (window.Module && typeof window.Module.resize === 'function') {
         try {
-          window.Module.resize(containerWidth, containerHeight)
+          window.Module.resize(displayWidth, displayHeight)
         } catch (e) {
-          // Module.resize not available, that's okay
+          // Module.resize not available; ignore
         }
       }
     }
 
-    // Initial resize
-    handleResize()
+    syncCanvasSize()
 
-    // Listen for resize events
+    const handleResize = () => {
+      if (!unityInstanceRef.current || !canvas) return
+      syncCanvasSize()
+    }
+
     window.addEventListener('resize', handleResize)
     window.addEventListener('orientationchange', handleResize)
 
-    // Use ResizeObserver for more precise container size changes
     let resizeObserver
     if (window.ResizeObserver) {
-      resizeObserver = new ResizeObserver(() => {
-        handleResize()
-      })
+      resizeObserver = new ResizeObserver(handleResize)
       resizeObserver.observe(container)
     }
 
@@ -79,21 +76,34 @@ const useUnity = (canvasRef) => {
     const canvas = canvasRef.current
     containerRef.current = canvas.parentElement
 
-    // Load Unity loader script
-    const script = document.createElement('script')
-    script.src = getAssetPath('build/Web Build 1.loader.js')
-    script.async = true
+    const cleanupTasks = []
 
-    script.onload = () => {
-      if (window.createUnityInstance && canvas) {
-        // Handle wheel events for scrolling
+    const loadUnity = () => {
+      if (!canvasRef.current || scriptLoadedRef.current) {
+        return
+      }
+
+      const loaderScript = document.createElement('script')
+      loaderScript.src = getAssetPath('build/Web Build 1.loader.js')
+      loaderScript.async = true
+
+      loaderScript.onload = () => {
+        if (typeof window.createUnityInstance !== 'function' || !canvasRef.current) {
+          return
+        }
+
+        const activeCanvas = canvasRef.current
+        if (!activeCanvas) {
+          return
+        }
+
         const handleWheel = (e) => {
           window.scrollBy({ top: e.deltaY, behavior: 'auto' })
         }
-        canvas.addEventListener('wheel', handleWheel, { passive: true })
+        activeCanvas.addEventListener('wheel', handleWheel, { passive: true })
+        cleanupTasks.push(() => activeCanvas.removeEventListener('wheel', handleWheel))
 
-        // Create Unity instance
-        window.createUnityInstance(canvas, {
+        window.createUnityInstance(activeCanvas, {
           dataUrl: getAssetPath('build/Web Build 1.data.unityweb'),
           frameworkUrl: getAssetPath('build/Web Build 1.framework.js.unityweb'),
           codeUrl: getAssetPath('build/Web Build 1.wasm.unityweb'),
@@ -102,48 +112,78 @@ const useUnity = (canvasRef) => {
           productName: 'Clatter',
           productVersion: '1.0',
           backgroundColor: { r: 0, g: 0, b: 0, a: 0 },
-          webGLContextAttributes: { alpha: true, preserveDrawingBuffer: false },
+          devicePixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+          webGLContextAttributes: {
+            alpha: true,
+            antialias: false,
+            preserveDrawingBuffer: false,
+            powerPreference: 'low-power',
+            desynchronized: true,
+          },
         })
           .then((unityInstance) => {
             unityInstanceRef.current = unityInstance
             setLoading(false)
-            // Unity WebGL loaded successfully
-            
-            // Trigger initial resize after load
+
             setTimeout(() => {
-              if (canvas && canvas.parentElement) {
-                const container = canvas.parentElement
-                canvas.style.width = `${container.clientWidth}px`
-                canvas.style.height = `${container.clientHeight}px`
+              if (activeCanvas && activeCanvas.parentElement) {
+                const displayWidth = activeCanvas.parentElement.clientWidth
+                const displayHeight = activeCanvas.parentElement.clientHeight
+                const scale = Math.min(window.devicePixelRatio || 1, 1.5)
+
+                activeCanvas.style.width = `${displayWidth}px`
+                activeCanvas.style.height = `${displayHeight}px`
+                activeCanvas.width = Math.floor(displayWidth * scale)
+                activeCanvas.height = Math.floor(displayHeight * scale)
               }
-            }, 100)
+            }, 120)
           })
           .catch((err) => {
             setError(err)
             setLoading(false)
+            scriptLoadedRef.current = false
             console.error('Unity WebGL loading error:', err)
           })
-
-        // Cleanup wheel handler
-        return () => {
-          canvas.removeEventListener('wheel', handleWheel)
-        }
       }
+
+      loaderScript.onerror = () => {
+        setError(new Error('Failed to load Unity loader script'))
+        setLoading(false)
+        scriptLoadedRef.current = false
+      }
+
+      document.body.appendChild(loaderScript)
+      scriptLoadedRef.current = true
+      cleanupTasks.push(() => {
+        if (loaderScript.parentNode) {
+          loaderScript.parentNode.removeChild(loaderScript)
+        }
+      })
     }
 
-    script.onerror = () => {
-      setError(new Error('Failed to load Unity loader script'))
-      setLoading(false)
+    let cancelIdle
+    if ('requestIdleCallback' in window) {
+      cancelIdle = window.requestIdleCallback(loadUnity, { timeout: 1500 })
+    } else {
+      const timeoutId = window.setTimeout(loadUnity, 250)
+      cancelIdle = () => window.clearTimeout(timeoutId)
     }
-
-    document.body.appendChild(script)
-    scriptLoadedRef.current = true
 
     return () => {
-      // Cleanup
-      if (script.parentNode) {
-        script.parentNode.removeChild(script)
+      if (typeof cancelIdle === 'number') {
+        window.cancelIdleCallback?.(cancelIdle)
+      } else if (typeof cancelIdle === 'function') {
+        cancelIdle()
       }
+
+      cleanupTasks.forEach((fn) => {
+        try {
+          fn()
+        } catch (e) {
+          // ignore cleanup errors
+        }
+      })
+
       scriptLoadedRef.current = false
     }
   }, [canvasRef])

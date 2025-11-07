@@ -25,8 +25,8 @@ const HeroSection = ({ videoUrl, steamUrl, price }) => {
       sx={{
         position: 'relative',
         width: '100%',
-        minHeight: { xs: 'auto', md: '100vh' },
-        height: { xs: 'auto', md: '100vh' },
+        minHeight: { xs: '720px', md: '100vh' },
+        height: { md: '100vh' },
         overflow: { xs: 'visible', md: 'hidden' },
         display: 'flex',
         flexDirection: 'column',
@@ -36,6 +36,11 @@ const HeroSection = ({ videoUrl, steamUrl, price }) => {
       <Box
         component={motion.img}
         src={getAssetPath('assets/images/background-die-grid.webp')}
+        srcSet={[
+          `${getAssetPath('assets/images/background-die-grid-900w.jpg')} 900w`,
+          `${getAssetPath('assets/images/background-die-grid-1400w.jpg')} 1400w`,
+        ].join(', ')}
+        sizes="(max-width: 900px) 100vw, 1200px"
         alt="Background"
         fetchPriority="high"
         loading="eager"
@@ -153,12 +158,12 @@ const HeroSection = ({ videoUrl, steamUrl, price }) => {
           top: { xs: 0, md: '-40px' },
           left: 0,
           width: '100%',
-          height: { xs: '35vh', sm: '50vh', md: '100%' },
+          height: { xs: 360, sm: 420, md: '100%' },
           zIndex: 5,
           overflow: 'hidden',
           // Ensure container is properly sized on all devices
           minWidth: 0,
-          minHeight: 0,
+          minHeight: { xs: 360, sm: 420, md: 0 },
         }}
       >
         {loading && <LoadingStates />}

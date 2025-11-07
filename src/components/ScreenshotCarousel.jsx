@@ -1,22 +1,12 @@
 import { useState } from 'react'
-import { Box, IconButton, Paper, useTheme, useMediaQuery } from '@mui/material'
+import { Box, IconButton, Paper } from '@mui/material'
 import { ChevronLeft, ChevronRight } from '@mui/icons-material'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { getAssetPath } from '../utils/paths'
-
-const screenshots = [
-  getAssetPath('assets/images/screenshot-1.png'),
-  getAssetPath('assets/images/screenshot-2.webp'),
-  getAssetPath('assets/images/screenshot-3.webp'),
-  getAssetPath('assets/images/screenshot-4.webp'),
-  getAssetPath('assets/images/screenshot-5.webp'),
-]
+import { screenshotData } from '../data/screenshots'
 
 const ScreenshotCarousel = ({ videoUrl }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -28,8 +18,8 @@ const ScreenshotCarousel = ({ videoUrl }) => {
   // if (videoUrl) {
   //   carouselItems.push({ type: 'video', url: videoUrl })
   // }
-  screenshots.forEach((screenshot) => {
-    carouselItems.push({ type: 'image', url: screenshot })
+  screenshotData.forEach((image) => {
+    carouselItems.push({ type: 'image', image })
   })
 
   const handlePrevious = () => {
@@ -194,7 +184,7 @@ const ScreenshotCarousel = ({ videoUrl }) => {
                         height: '100%',
                         display: 'block',
                         cursor: 'pointer',
-                        objectFit: 'contain',
+                        objectFit: 'cover',
                       }}
                       onClick={(e) => {
                         const video = e.currentTarget
@@ -214,19 +204,24 @@ const ScreenshotCarousel = ({ videoUrl }) => {
                     </Box>
                   </Box>
                 ) : (
-                  <Box
-                    component="img"
-                    src={currentItem.url}
-                    alt={`Gameplay screenshot ${videoUrl ? currentIndex : currentIndex + 1}`}
-                    loading={currentIndex === 0 ? "eager" : "lazy"}
-                    sx={{
-                      width: '100%',
-                      height: 'auto',
-                      maxWidth: '100%',
-                      display: 'block',
-                      objectFit: 'contain',
-                    }}
-                  />
+                  <Box component="picture" sx={{ display: 'block' }}>
+                    <Box
+                      component="img"
+                      src={currentItem.image.src}
+                      srcSet={currentItem.image.srcSet}
+                      sizes={currentItem.image.sizes}
+                      alt={currentItem.image.alt}
+                      loading={currentIndex === 0 ? 'eager' : 'lazy'}
+                      sx={{
+                        width: '100%',
+                        height: 'auto',
+                        maxWidth: '100%',
+                        display: 'block',
+                        objectFit: 'contain',
+                        aspectRatio: '16 / 9',
+                      }}
+                    />
+                  </Box>
                 )}
               </Paper>
             </motion.div>

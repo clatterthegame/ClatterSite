@@ -24,14 +24,23 @@ const AchievementsShowcase = () => {
         py: { xs: 8, md: 12 },
         position: 'relative',
         overflow: 'hidden',
-        background: `
+        backgroundImage: `
           linear-gradient(135deg, rgba(10, 0, 20, 0.85) 0%, rgba(20, 0, 40, 0.85) 100%),
-          url(${getAssetPath('assets/images/tons-of-dice.webp')})
+          url(${getAssetPath('assets/images/tons-of-dice-1000w.jpg')})
         `,
-        backgroundSize: 'cover, 150%',
+        backgroundSize: 'cover, cover',
         backgroundPosition: 'center, center',
         backgroundAttachment: 'fixed, fixed',
         backgroundBlendMode: 'normal, screen',
+        '@supports (background-image: image-set(url("x") 1x))': {
+          backgroundImage: `
+            linear-gradient(135deg, rgba(10, 0, 20, 0.85) 0%, rgba(20, 0, 40, 0.85) 100%),
+            image-set(
+              url(${getAssetPath('assets/images/tons-of-dice-1000w.jpg')}) 1x,
+              url(${getAssetPath('assets/images/tons-of-dice.webp')}) 2x
+            )
+          `,
+        },
       }}
     >
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
